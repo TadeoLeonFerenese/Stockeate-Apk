@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Stockeate",
-    "slug": "stockeate",
+    "slug": "stockeate-tadeoleon",
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -15,7 +15,11 @@
       "bundleIdentifier": "com.gonzalocopes.stockeate"
     },
     "android": {
-      "permissions": ["CAMERA"],
+      "permissions": [
+        "CAMERA",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundColor": "#E6F4FE"
@@ -49,7 +53,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "2c07a257-3170-4fc5-a4a6-2768912ba87d"
+        "projectId": "f5c34a4f-1c18-4553-af56-006b182e14bb"
       }
     }
   }

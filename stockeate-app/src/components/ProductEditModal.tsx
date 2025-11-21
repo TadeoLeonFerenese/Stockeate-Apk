@@ -12,6 +12,7 @@ import {
   Keyboard,
   ScrollView,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
 
 type Props = {
@@ -82,20 +83,27 @@ export default function ProductEditModal({
 
   const isEdit = !!initialName || !!initialPrice || !!initialStock;
 
+  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+  const isTablet = screenWidth >= 768;
+  const modalHeight = isTablet 
+    ? Math.min(screenHeight * 0.4, 350) 
+    : Math.min(screenHeight * 0.6, 400);
+
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onCancel}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.4)", justifyContent: "flex-end" }}>
+        <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.4)", justifyContent: "center", paddingHorizontal: isTablet ? screenWidth * 0.2 : 16 }}>
           <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : undefined}
-            keyboardVerticalOffset={Platform.OS === "ios" ? 24 : 0}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={Platform.OS === "ios" ? (isTablet ? 80 : 60) : (isTablet ? 40 : 20)}
+            style={{ flex: 1, justifyContent: "center" }}
           >
             <View
               style={{
                 backgroundColor: "white",
-                borderTopLeftRadius: 16,
-                borderTopRightRadius: 16,
-                height: 400,
+                borderRadius: 16,
+                maxHeight: modalHeight,
+                minHeight: 300,
               }}
             >
               <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
@@ -112,7 +120,7 @@ export default function ProductEditModal({
                 keyboardShouldPersistTaps="handled"
                 contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}
                 showsVerticalScrollIndicator={false}
-                style={{ maxHeight: 240 }}
+                style={{ maxHeight: modalHeight - 140 }}
               >
                 <View style={{ gap: 12 }}>
                   <View style={{ gap: 6 }}>
@@ -176,7 +184,7 @@ export default function ProductEditModal({
                 </View>
               </ScrollView>
 
-              <View style={{ paddingHorizontal: 16, paddingBottom: 16, paddingTop: 8, backgroundColor: "white" }}>
+              <View style={{ paddingHorizontal: 16, paddingBottom: 16, paddingTop: 8, backgroundColor: "white", borderBottomLeftRadius: 16, borderBottomRightRadius: 16 }}>
                 <View style={{ flexDirection: "row", gap: 12 }}>
                   <TouchableOpacity
                     onPress={onCancel}
