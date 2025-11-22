@@ -14,6 +14,8 @@ import {
   StyleSheet,
   Dimensions,
   Pressable,
+  TouchableWithoutFeedback,
+  ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // <-- Importamos Ionicons
 import { useIsFocused } from "@react-navigation/native";
@@ -257,10 +259,7 @@ export default function BranchProducts({ navigation, route }: any) {
   if (!branchId) {
     return (
       <View
-        style={[
-          styles.centered,
-          { backgroundColor: theme.colors.background },
-        ]}
+        style={[styles.centered, { backgroundColor: theme.colors.background }]}
       >
         <Text style={{ color: theme.colors.text }}>
           Primero seleccioná una sucursal.
@@ -345,9 +344,7 @@ export default function BranchProducts({ navigation, route }: any) {
               marginTop: 6,
             }}
           >
-            <View
-              style={[styles.stockBadge, { backgroundColor: badge.bg }]}
-            >
+            <View style={[styles.stockBadge, { backgroundColor: badge.bg }]}>
               <Text style={styles.stockBadgeText}>{badge.label}</Text>
             </View>
           </View>
@@ -512,185 +509,221 @@ export default function BranchProducts({ navigation, route }: any) {
           animationType="slide"
           onRequestClose={() => setEditOpen(false)}
         >
-          <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View
               style={{
                 flex: 1,
                 backgroundColor: "rgba(0,0,0,0.4)",
-                justifyContent: "flex-end",
+                justifyContent: "flex-start",
+                paddingTop: 80,
+                paddingHorizontal: screenWidth >= 768 ? screenWidth * 0.2 : 16,
+                paddingBottom: Dimensions.get("window").height * 0.5,
               }}
             >
               <KeyboardAvoidingView
-                behavior={Platform.OS === "ios" ? "padding" : undefined}
-                keyboardVerticalOffset={Platform.OS === "ios" ? 24 : 0}
+                behavior="position"
+                keyboardVerticalOffset={0}
+                style={{ flex: 1 }}
               >
                 <View
                   style={{
                     backgroundColor: theme.colors.card,
                     padding: 16,
-                    borderTopLeftRadius: 16,
-                    borderTopRightRadius: 16,
+                    borderRadius: 16,
+                    maxHeight: Math.min(
+                      Dimensions.get("window").height * 0.55,
+                      screenWidth >= 768 ? 450 : 400
+                    ),
+                    minHeight: 300,
                   }}
                 >
-                  <View style={{ alignItems: "center", marginBottom: 8 }}>
+                  <ScrollView
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{ paddingBottom: 16 }}
+                  >
                     <View
                       style={{
-                        width: 40,
-                        height: 4,
-                        backgroundColor: theme.colors.border,
-                        borderRadius: 2,
-                      }}
-                    />
-                  </View>
-
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: "800",
-                      marginBottom: 12,
-                      color: theme.colors.text,
-                    }}
-                  >
-                    Editar producto
-                  </Text>
-
-                  {/* Código (solo lectura) */}
-                  <View style={{ marginBottom: 10 }}>
-                    <Text
-                      style={{
-                        fontWeight: "600",
-                        marginBottom: 6,
-                        color: theme.colors.text,
-                      }}
-                    >
-                      Código
-                    </Text>
-                    <TextInput
-                      value={editCode}
-                      editable={false}
-                      style={{
-                        borderWidth: 1,
-                        borderColor: theme.colors.inputBorder,
-                        borderRadius: 8,
-                        padding: 10,
-                        backgroundColor: theme.colors.inputBackground,
-                        color: theme.colors.textMuted,
-                      }}
-                    />
-                  </View>
-
-                  {/* Nombre */}
-                  <View style={{ marginBottom: 10 }}>
-                    <Text
-                      style={{
-                        fontWeight: "600",
-                        marginBottom: 6,
-                        color: theme.colors.text,
-                      }}
-                    >
-                      Nombre
-                    </Text>
-                    <TextInput
-                      value={editName}
-                      onChangeText={setEditName}
-                      placeholder="Nombre"
-                      placeholderTextColor={theme.colors.textMuted}
-                      style={{
-                        borderWidth: 1,
-                        borderColor: theme.colors.inputBorder,
-                        borderRadius: 8,
-                        padding: 10,
-                        backgroundColor: theme.colors.inputBackground,
-                        color: theme.colors.text,
-                      }}
-                    />
-                  </View>
-
-                  {/* Precio */}
-                  <View style={{ marginBottom: 10 }}>
-                    <Text
-                      style={{
-                        fontWeight: "600",
-                        marginBottom: 6,
-                        color: theme.colors.text,
-                      }}
-                    >
-                      Precio
-                    </Text>
-                    <TextInput
-                      value={editPrice}
-                      onChangeText={setEditPrice}
-                      keyboardType="decimal-pad"
-                      placeholder="$ 0"
-                      placeholderTextColor={theme.colors.textMuted}
-                      style={{
-                        borderWidth: 1,
-                        borderColor: theme.colors.inputBorder,
-                        borderRadius: 8,
-                        padding: 10,
-                        backgroundColor: theme.colors.inputBackground,
-                        color: theme.colors.text,
-                      }}
-                    />
-                  </View>
-
-                  {/* Stock */}
-                  <View style={{ marginBottom: 14 }}>
-                    <Text
-                      style={{
-                        fontWeight: "600",
-                        marginBottom: 6,
-                        color: theme.colors.text,
-                      }}
-                    >
-                      Stock (entero)
-                    </Text>
-                    <TextInput
-                      value={editStock}
-                      onChangeText={setEditStock}
-                      keyboardType="number-pad"
-                      placeholder="0"
-                      placeholderTextColor={theme.colors.textMuted}
-                      style={{
-                        borderWidth: 1,
-                        borderColor: theme.colors.inputBorder,
-                        borderRadius: 8,
-                        padding: 10,
-                        backgroundColor: theme.colors.inputBackground,
-                        color: theme.colors.text,
-                      }}
-                    />
-                  </View>
-
-                  {/* Botones: Cancelar / Guardar */}
-                  <View style={{ flexDirection: "row", gap: 12 }}>
-                    <Pressable
-                      onPress={() => {
-                        setEditOpen(false);
-                        setEditing(null);
-                      }}
-                      style={{
-                        flex: 1,
-                        paddingVertical: 12,
-                        borderRadius: 10,
-                        backgroundColor: theme.colors.inputBorder,
                         alignItems: "center",
+                        marginBottom: 8,
                       }}
                     >
+                      <View
+                        style={{
+                          width: 40,
+                          height: 4,
+                          backgroundColor: theme.colors.border,
+                          borderRadius: 2,
+                        }}
+                      />
+                    </View>
+
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: "800",
+                        marginBottom: 12,
+                        color: theme.colors.text,
+                      }}
+                    >
+                      Editar producto
+                    </Text>
+
+                    {/* Código (solo lectura) */}
+                    <View style={{ marginBottom: 10 }}>
                       <Text
                         style={{
+                          fontWeight: "600",
+                          marginBottom: 6,
                           color: theme.colors.text,
-                          fontWeight: "800",
                         }}
                       >
-                        Cancelar
+                        Código
                       </Text>
-                    </Pressable>
+                      <TextInput
+                        value={editCode}
+                        editable={false}
+                        style={{
+                          borderWidth: 1,
+                          borderColor: theme.colors.inputBorder,
+                          borderRadius: 8,
+                          padding: 10,
+                          backgroundColor: theme.colors.inputBackground,
+                          color: theme.colors.textMuted,
+                        }}
+                      />
+                    </View>
 
+                    {/* Nombre */}
+                    <View style={{ marginBottom: 10 }}>
+                      <Text
+                        style={{
+                          fontWeight: "600",
+                          marginBottom: 6,
+                          color: theme.colors.text,
+                        }}
+                      >
+                        Nombre
+                      </Text>
+                      <TextInput
+                        value={editName}
+                        onChangeText={setEditName}
+                        placeholder="Nombre"
+                        placeholderTextColor={theme.colors.textMuted}
+                        style={{
+                          borderWidth: 1,
+                          borderColor: theme.colors.inputBorder,
+                          borderRadius: 8,
+                          padding: 10,
+                          backgroundColor: theme.colors.inputBackground,
+                          color: theme.colors.text,
+                        }}
+                      />
+                    </View>
+
+                    {/* Precio */}
+                    <View style={{ marginBottom: 10 }}>
+                      <Text
+                        style={{
+                          fontWeight: "600",
+                          marginBottom: 6,
+                          color: theme.colors.text,
+                        }}
+                      >
+                        Precio
+                      </Text>
+                      <TextInput
+                        value={editPrice}
+                        onChangeText={setEditPrice}
+                        keyboardType="decimal-pad"
+                        placeholder="$ 0"
+                        placeholderTextColor={theme.colors.textMuted}
+                        style={{
+                          borderWidth: 1,
+                          borderColor: theme.colors.inputBorder,
+                          borderRadius: 8,
+                          padding: 10,
+                          backgroundColor: theme.colors.inputBackground,
+                          color: theme.colors.text,
+                        }}
+                      />
+                    </View>
+
+                    {/* Stock */}
+                    <View style={{ marginBottom: 14 }}>
+                      <Text
+                        style={{
+                          fontWeight: "600",
+                          marginBottom: 6,
+                          color: theme.colors.text,
+                        }}
+                      >
+                        Stock (entero)
+                      </Text>
+                      <TextInput
+                        value={editStock}
+                        onChangeText={setEditStock}
+                        keyboardType="number-pad"
+                        placeholder="0"
+                        placeholderTextColor={theme.colors.textMuted}
+                        style={{
+                          borderWidth: 1,
+                          borderColor: theme.colors.inputBorder,
+                          borderRadius: 8,
+                          padding: 10,
+                          backgroundColor: theme.colors.inputBackground,
+                          color: theme.colors.text,
+                        }}
+                      />
+                    </View>
+
+                    {/* Botones: Cancelar / Guardar */}
+                    <View style={{ flexDirection: "row", gap: 12 }}>
+                      <Pressable
+                        onPress={() => {
+                          setEditOpen(false);
+                          setEditing(null);
+                        }}
+                        style={{
+                          flex: 1,
+                          paddingVertical: 12,
+                          borderRadius: 10,
+                          backgroundColor: theme.colors.inputBorder,
+                          alignItems: "center",
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: theme.colors.text,
+                            fontWeight: "800",
+                          }}
+                        >
+                          Cancelar
+                        </Text>
+                      </Pressable>
+
+                      <Pressable
+                        onPress={onSaveEdit}
+                        style={{
+                          flex: 1,
+                          paddingVertical: 12,
+                          borderRadius: 10,
+                          backgroundColor: theme.colors.primary,
+                          alignItems: "center",
+                        }}
+                      >
+                        <Text style={{ color: "#fff", fontWeight: "800" }}>
+                          Guardar
+                        </Text>
+                      </Pressable>
+                    </View>
+
+                    {/* Archivar */}
                     <Pressable
-                      onPress={onSaveEdit}
+                      onPress={archiveFromEdit}
                       style={{
-                        flex: 1,
+                        marginTop: 16,
+                        marginBottom: Platform.OS === "android" ? 10 : 4,
                         paddingVertical: 12,
                         borderRadius: 10,
                         backgroundColor: theme.colors.primary,
@@ -698,40 +731,19 @@ export default function BranchProducts({ navigation, route }: any) {
                       }}
                     >
                       <Text
-                        style={{ color: "#fff", fontWeight: "800" }}
+                        style={{
+                          color: "#fff",
+                          fontWeight: "800",
+                        }}
                       >
-                        Guardar
+                        Archivar producto
                       </Text>
                     </Pressable>
-                  </View>
-
-                  {/* Archivar (CAMBIO VISUAL ÚNICO) */}
-                  <Pressable
-                    onPress={archiveFromEdit}
-                    style={{
-                      marginTop: 16,
-                      marginBottom: Platform.OS === "android" ? 10 : 4,
-                      paddingVertical: 12,
-                      borderRadius: 10,
-                      backgroundColor: "transparent",
-                      borderWidth: 1.5,
-                      borderColor: theme.colors.danger,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: theme.colors.danger,
-                        fontWeight: "800",
-                      }}
-                    >
-                      Archivar producto
-                    </Text>
-                  </Pressable>
+                  </ScrollView>
                 </View>
               </KeyboardAvoidingView>
             </View>
-          </Pressable>
+          </TouchableWithoutFeedback>
         </Modal>
       )}
     </View>
@@ -759,9 +771,7 @@ function Chip({
           backgroundColor: active
             ? theme.colors.primary
             : theme.colors.inputBackground,
-          borderColor: active
-            ? theme.colors.primary
-            : theme.colors.inputBorder,
+          borderColor: active ? theme.colors.primary : theme.colors.inputBorder,
         },
       ]}
     >

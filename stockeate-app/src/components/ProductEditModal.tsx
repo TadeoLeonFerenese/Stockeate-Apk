@@ -85,18 +85,18 @@ export default function ProductEditModal({
 
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const isTablet = screenWidth >= 768;
-  const modalHeight = isTablet 
-    ? Math.min(screenHeight * 0.4, 350) 
-    : Math.min(screenHeight * 0.6, 400);
+  // El teclado ocupa ~40% de la pantalla, entonces el modal debe caber en el 60% superior
+  const availableHeight = screenHeight * 0.55; // 55% para estar seguro
+  const modalHeight = Math.min(availableHeight, isTablet ? 450 : 400);
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onCancel}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.4)", justifyContent: "center", paddingHorizontal: isTablet ? screenWidth * 0.2 : 16 }}>
+        <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.4)", justifyContent: "flex-start", paddingTop: 80, paddingHorizontal: isTablet ? screenWidth * 0.2 : 16, paddingBottom: screenHeight * 0.5 }}>
           <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            keyboardVerticalOffset={Platform.OS === "ios" ? (isTablet ? 80 : 60) : (isTablet ? 40 : 20)}
-            style={{ flex: 1, justifyContent: "center" }}
+            behavior="position"
+            keyboardVerticalOffset={0}
+            style={{ flex: 1 }}
           >
             <View
               style={{
@@ -130,7 +130,8 @@ export default function ProductEditModal({
                       value={codeStr}
                       onChangeText={setCodeStr}
                       placeholder="Código del producto"
-                      style={{ borderWidth: 1, borderColor: "#cbd5e1", borderRadius: 8, padding: 10, backgroundColor: "#ffffff" }}
+                      style={{ borderWidth: 1, borderColor: "#cbd5e1", borderRadius: 8, padding: 10, backgroundColor: "#ffffff", color: "#000000" }}
+                      placeholderTextColor="#9ca3af"
                       returnKeyType="next"
                       onSubmitEditing={() => nameRef.current?.focus()}
                     />
@@ -143,7 +144,7 @@ export default function ProductEditModal({
                       value={name}
                       onChangeText={setName}
                       placeholder="Nombre del producto"
-                      style={{ borderWidth: 1, borderColor: "#cbd5e1", borderRadius: 8, padding: 10, backgroundColor: "#ffffff" }}
+                      style={{ borderWidth: 1, borderColor: "#cbd5e1", borderRadius: 8, padding: 10, backgroundColor: "#ffffff", color: "#000000" }}
                       returnKeyType="next"
                       onSubmitEditing={() => priceRef.current?.focus()}
                     />
@@ -159,7 +160,7 @@ export default function ProductEditModal({
                         onChangeText={setPriceStr}
                         placeholder="0"
                         keyboardType="decimal-pad"
-                        style={{ flex: 1, padding: 10, paddingLeft: 4 }}
+                        style={{ flex: 1, padding: 10, paddingLeft: 4, color: "#000000" }}
                         returnKeyType="next"
                         onSubmitEditing={() => stockRef.current?.focus()}
                       />
@@ -176,7 +177,7 @@ export default function ProductEditModal({
                       onChangeText={setStockStr}
                       placeholder="0"
                       keyboardType="number-pad"
-                      style={{ borderWidth: 1, borderColor: "#cbd5e1", borderRadius: 8, padding: 10, backgroundColor: "#ffffff" }}
+                      style={{ borderWidth: 1, borderColor: "#cbd5e1", borderRadius: 8, padding: 10, backgroundColor: "#ffffff", color: "#000000" }}
                       returnKeyType="done"
                       onSubmitEditing={handleSave}
                     />
